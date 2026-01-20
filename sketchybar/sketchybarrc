@@ -1,0 +1,33 @@
+#!/bin/bash
+
+CONFIG_DIR="$HOME/.config/sketchybar"
+PLUGIN_DIR="$CONFIG_DIR/plugins"
+source "$CONFIG_DIR/defaults.sh"
+
+sketchybar --bar height=32 color=0x00000000 blur_radius=30
+
+sketchybar --add item clock right
+sketchybar --set clock script="$PLUGIN_DIR/clock.sh" \
+                      padding_right=0 \
+                      "${ITEM_STYLE[@]}" \
+                      update_freq=10
+
+sketchybar --add item wifi right
+sketchybar --set wifi script="$PLUGIN_DIR/wifi.sh" \
+                     icon="󰤨" \
+                     padding_right=15 \
+                     "${ITEM_STYLE[@]}" \
+                     update_freq=5
+
+sketchybar --add item battery right
+sketchybar --set battery script="$PLUGIN_DIR/battery.sh" \
+                        padding_right=15 \
+                        "${ITEM_STYLE[@]}" \
+                        update_freq=10
+
+sketchybar --add item weather right
+sketchybar --set weather \
+  script="$PLUGIN_DIR/weather.sh" \
+  update_freq=900 \
+  padding_right=15 \
+  "${ITEM_STYLE[@]}"
