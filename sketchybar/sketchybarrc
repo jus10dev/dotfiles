@@ -4,7 +4,7 @@ CONFIG_DIR="$HOME/.config/sketchybar"
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 source "$CONFIG_DIR/defaults.sh"
 
-sketchybar --bar height=32 color=0x00000000 blur_radius=30
+sketchybar --bar height=32 color=0x00000000 blur_radius=30 y_offset=10
 
 sketchybar --add item clock right
 sketchybar --set clock script="$PLUGIN_DIR/clock.sh" \
