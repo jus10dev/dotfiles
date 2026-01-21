@@ -3,14 +3,40 @@
 # Show a placeholder first
 sketchybar -m --set weather label="..." icon="⛅️"
 
-# Get coordinates from IP geolocation
-LOCATION=$(curl -s "http://ip-api.com/json/")
-LAT=$(echo "$LOCATION" | grep -o '"lat":[0-9.]*' | cut -d':' -f2)
-LON=$(echo "$LOCATION" | grep -o '"lon":-*[0-9.]*' | cut -d':' -f2)
+# Location cache (refreshes every 30 minutes)
+CACHE_DIR="$HOME/.cache/sketchybar"
+CACHE_FILE="$CACHE_DIR/location"
+CACHE_MAX_AGE=1800  # 30 minutes in seconds
 
-# Fallback to LA coordinates
+mkdir -p "$CACHE_DIR"
+
+# Check if cache exists and is fresh
+if [[ -f "$CACHE_FILE" ]]; then
+  CACHE_AGE=$(($(date +%s) - $(stat -f %m "$CACHE_FILE")))
+  if [[ $CACHE_AGE -lt $CACHE_MAX_AGE ]]; then
+    source "$CACHE_FILE"
+  fi
+fi
+
+# Fetch new location if not cached
+if [[ -z "$LAT" || -z "$LON" ]]; then
+  LOCATION=$(curl -s "http://ip-api.com/json/")
+  LAT=$(echo "$LOCATION" | grep -o '"lat":[0-9.]*' | cut -d':' -f2)
+  LON=$(echo "$LOCATION" | grep -o '"lon":-*[0-9.]*' | cut -d':' -f2)
+  CITY=$(echo "$LOCATION" | grep -o '"city":"[^"]*"' | cut -d'"' -f4)
+
+  # Save to cache if we got valid coordinates
+  if [[ -n "$LAT" && -n "$LON" ]]; then
+    echo "LAT=$LAT" > "$CACHE_FILE"
+    echo "LON=$LON" >> "$CACHE_FILE"
+    echo "CITY=\"$CITY\"" >> "$CACHE_FILE"
+  fi
+fi
+
+# Fallback to LA
 [ -z "$LAT" ] && LAT="34.05"
 [ -z "$LON" ] && LON="-118.24"
+[ -z "$CITY" ] && CITY="Los Angeles"
 
 # Fetch weather from Open-Meteo (free, no rate limits)
 WEATHER=$(curl -s "https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,weather_code&temperature_unit=fahrenheit")
@@ -34,4 +60,4 @@ case "$CODE" in
 esac
 
 # Update the bar
-sketchybar -m --set weather label="${TEMP}°F" icon="$ICON"
+sketchybar -m --set weather label="${CITY} ${TEMP}°F" icon="$ICON"
