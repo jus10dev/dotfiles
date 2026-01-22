@@ -25,6 +25,13 @@ sketchybar --set battery script="$PLUGIN_DIR/battery.sh" \
                         "${ITEM_STYLE[@]}" \
                         update_freq=10
 
+sketchybar --add item disk right
+sketchybar --set disk script="$PLUGIN_DIR/disk.sh" \
+                      icon="💾" \
+                      padding_right=15 \
+                      "${ITEM_STYLE[@]}" \
+                      update_freq=60
+
 sketchybar --add item weather right
 sketchybar --set weather \
   script="$PLUGIN_DIR/weather.sh" \
