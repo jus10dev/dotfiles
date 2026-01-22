@@ -2,7 +2,7 @@
 
 ITEM_STYLE=(
   background.drawing=on
-  background.color=0xcc041131
+  background.color=0x80041131
   background.corner_radius=9
   label.font="SF Pro:Heavy:10.0"
   icon.font="JetBrainsMono Nerd Font:Bold:10.0"
