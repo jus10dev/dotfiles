@@ -39,3 +39,4 @@ sketchybar --set weather \
   update_freq=900 \
   padding_right=15 \
   "${ITEM_STYLE[@]}"
+sketchybar --subscribe weather system_woke

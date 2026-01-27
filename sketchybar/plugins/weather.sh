@@ -3,6 +3,11 @@
 # Show a placeholder first
 sketchybar -m --set weather label="..." icon="⛅️"
 
+# Clear location cache on wake to get fresh city
+if [[ "$SENDER" == "system_woke" ]]; then
+  rm -f "$HOME/.cache/sketchybar/location"
+fi
+
 # Location cache (refreshes every 30 minutes)
 CACHE_DIR="$HOME/.cache/sketchybar"
 CACHE_FILE="$CACHE_DIR/location"
