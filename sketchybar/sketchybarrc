@@ -3,8 +3,35 @@
 CONFIG_DIR="$HOME/.config/sketchybar"
 PLUGIN_DIR="$CONFIG_DIR/plugins"
 source "$CONFIG_DIR/defaults.sh"
+source "$CONFIG_DIR/colors.sh"
 
 sketchybar --bar height=32 color=0x00000000 blur_radius=30 y_offset=10
+
+# Workspace items (left side)
+for sid in 1 2; do
+  sketchybar --add item space.$sid left \
+             --set space.$sid \
+                   icon="$sid" \
+                   icon.font="SF Pro:Bold:12.0" \
+                   icon.color=$ACCENT_COLOR \
+                   icon.padding_left=10 \
+                   icon.padding_right=4 \
+                   label.font="JetBrainsMono Nerd Font:Bold:14.0" \
+                   label.color=$ACCENT_COLOR \
+                   label.padding_right=10 \
+                   label=" —" \
+                   background.color=$ACCENT_COLOR \
+                   background.corner_radius=6 \
+                   background.height=24 \
+                   background.drawing=off \
+                   script="$PLUGIN_DIR/update_workspace_icons.sh" \
+             --subscribe space.$sid aerospace_workspace_change
+done
+
+# Set initial focused workspace appearance
+sketchybar --set space.1 background.drawing=on \
+                         icon.color=$ITEM_COLOR \
+                         label.color=$ITEM_COLOR
 
 sketchybar --add item clock right
 sketchybar --set clock script="$PLUGIN_DIR/clock.sh" \
