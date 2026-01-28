@@ -25,6 +25,7 @@ for sid in 1 2; do
                    background.height=24 \
                    background.drawing=off \
                    script="$PLUGIN_DIR/update_workspace_icons.sh" \
+                   update_freq=3 \
              --subscribe space.$sid aerospace_workspace_change
 done
 

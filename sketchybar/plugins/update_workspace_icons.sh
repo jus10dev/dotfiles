@@ -38,13 +38,17 @@ update_icons() {
   sketchybar --animate sin 10 --set space.$sid label="$icon_strip"
 }
 
-# Update appearance for previous and focused workspaces
-if [ -n "$PREV_WORKSPACE" ]; then
-  update_workspace_appearance "$PREV_WORKSPACE" "false"
-  update_icons "$PREV_WORKSPACE"
+# Get current focused workspace if not provided
+if [ -z "$FOCUSED_WORKSPACE" ]; then
+  FOCUSED_WORKSPACE=$(aerospace list-workspaces --focused 2>/dev/null)
 fi
 
-if [ -n "$FOCUSED_WORKSPACE" ]; then
-  update_workspace_appearance "$FOCUSED_WORKSPACE" "true"
-  update_icons "$FOCUSED_WORKSPACE"
-fi
+# Update all workspaces
+for sid in 1 2; do
+  if [ "$sid" = "$FOCUSED_WORKSPACE" ]; then
+    update_workspace_appearance "$sid" "true"
+  else
+    update_workspace_appearance "$sid" "false"
+  fi
+  update_icons "$sid"
+done
